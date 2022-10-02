@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Umbraco.DataAnnotations.Interfaces;
 
 namespace Umbraco.DataAnnotations.ConditionalAttributes
 {
@@ -8,7 +9,7 @@ namespace Umbraco.DataAnnotations.ConditionalAttributes
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
     AllowMultiple = false)]
-    public sealed class UmbracoRegularExpressionIfAttribute : RegularExpressionAttribute
+    public sealed class UmbracoRegularExpressionIfAttribute : RegularExpressionAttribute, IUmbracoValidationAttribute
     {
         public string DictionaryKey { get; set; }
 
