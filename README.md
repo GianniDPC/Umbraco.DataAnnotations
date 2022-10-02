@@ -26,10 +26,6 @@ Only default `en-US` keys and translations are added.
 ## Client Validation
 Include the following scripts in your layout .cshtml file
 
-
-## Client Validation
-Include the following scripts in your layout .cshtml file
-
 ```
 <body>
     @RenderBody()
