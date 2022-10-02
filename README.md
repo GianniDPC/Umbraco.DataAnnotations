@@ -14,6 +14,19 @@ Build the project and start website.
 On first run, a migration will check foreach dictionary key used in the application and added it to umbraco dictionary items.
 Only default `en-US` keys and translations are added.
 
+NuGet:
+```
+PM > Install-Package Custom.Umbraco.DataAnnotations
+```
+
+Build the project and start website.
+On first run, a migration will check foreach dictionary key used in the application and added it to umbraco dictionary items.
+Only default `en-US` keys and translations are added.
+
+## Client Validation
+Include the following scripts in your layout .cshtml file
+
+
 ## Client Validation
 Include the following scripts in your layout .cshtml file
 
