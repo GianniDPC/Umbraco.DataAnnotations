@@ -1,4 +1,4 @@
-# Umbraco.DataAnnotations (Umbraco 8,9 and 10 only)
+# Umbraco.DataAnnotations (Umbraco 8, 9 and 10 only)
 
 Contains model validation attributes to for your properties, by using umbraco dictionary as the resource for error messages.
 
