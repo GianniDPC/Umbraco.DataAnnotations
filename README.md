@@ -7,7 +7,7 @@ The original project that seems to be no longer active can be found below, my wo
 https://github.com/rasmuseeg/Our.Umbraco.DataAnnotations
 
 ## Installation
-This version will only work with Umbraco 10. Any lower version will not work!
+This version should work on Umbraco 8 - 10. (Currently only properly tested on Umbraco 10).
 During installation the keys will be created nested below `DataAnnotations` dictionary key.
 
 Build the project and start website.
