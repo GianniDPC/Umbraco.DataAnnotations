@@ -1,7 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
+#if NET || NETCOREAPP
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Infrastructure.Migrations;
+#else
+using Umbraco.Core.Migrations;
+using Umbraco.Core.Services;
+using Umbraco.Web.Composing;
+#endif
 
 namespace Umbraco.DataAnnotations.Migrations
 {
@@ -9,10 +16,17 @@ namespace Umbraco.DataAnnotations.Migrations
     {
         private ILocalizationService _localizationService;
 
+#if NET || NETCOREAPP
         public CreateNotesTable(IMigrationContext context, ILocalizationService localizationService) : base(context)
         {
             _localizationService = localizationService;
         }
+#else
+        public CreateNotesTable(IMigrationContext context) : base(context)
+        {
+            _localizationService = Current.Services.LocalizationService;
+        }
+#endif
 
         private readonly Dictionary<string, string> defaultDictionaryItems = new Dictionary<string, string>() {
             { "RequiredError", "{0} is required." },
@@ -29,7 +43,11 @@ namespace Umbraco.DataAnnotations.Migrations
             { "PasswordStrengthError", "Must be at least {1} characters long and contain {2} symbol (!, @, #, etc)." },
         };
 
+#if NET || NETCOREAPP
         protected override void Migrate()
+#else
+        public override void Migrate()
+#endif
         {
             var languages = _localizationService.GetAllLanguages();
             var language = languages.FirstOrDefault(x => x.IsoCode == "en-GB" || x.IsoCode == "en-US")

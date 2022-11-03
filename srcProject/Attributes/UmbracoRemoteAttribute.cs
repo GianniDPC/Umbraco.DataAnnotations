@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#if NET || NETCOREAPP
+using Microsoft.AspNetCore.Mvc;
+#else
+using System.Web.Mvc;
+#endif
+
 using System;
 using Umbraco.DataAnnotations.Interfaces;
 
