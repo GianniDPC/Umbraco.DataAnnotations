@@ -45,8 +45,9 @@ namespace Umbraco.DataAnnotations.Attributes
                 throw new ArgumentNullException(nameof(context));
             }
 
-            var errorMessage = UmbracoDictionary.GetDictionaryValue(DictionaryKey);
+            var errorMessage = ErrorMessage = UmbracoDictionary.GetDictionaryValue(DictionaryKey);
 
+            context.Attributes.Add("data-val-required", errorMessage);
             context.Attributes.Add("data-val-mustbetrue", errorMessage); // Add attributes for client-side validation
             context.Attributes.Add("data-val", "true");
         }
