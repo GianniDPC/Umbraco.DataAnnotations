@@ -1,43 +1,36 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Umbraco.DataAnnotations;
 using Umbraco.DataAnnotations.Interfaces;
 
-namespace Umbraco.DataAnnotations.ConditionalAttributes
+
+namespace Our.Umbraco.DataAnnotations.Conditionals
 {
-    /// <summary>
-    ///     Conditional regular expression validation attribute
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
-    AllowMultiple = false)]
-    public sealed class UmbracoRegularExpressionIfAttribute : RegularExpressionAttribute, IUmbracoValidationAttribute
+    public sealed class UmbracoRegularExpressionIfAttribute : ConditionalValidationAttribute, IUmbracoValidationAttribute
     {
         public string DictionaryKey { get; set; }
 
-        private string PropertyName { get; set; }
-        private object DesiredValue { get; set; }
+        private readonly string pattern;
+        protected override string ValidationName => "regularexpressionif";
 
-        public UmbracoRegularExpressionIfAttribute(string pattern, string propertyName, object desiredvalue) : base(pattern)
+        public UmbracoRegularExpressionIfAttribute(string pattern, string dependentProperty, object targetValue)
+            : base(new RegularExpressionAttribute(pattern), dependentProperty, targetValue)
         {
-            PropertyName = propertyName;
-            DesiredValue = desiredvalue;
+            this.pattern = pattern;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext context)
+        protected override IDictionary<string, object> GetExtraValidationParameters()
         {
-            object instance = context.ObjectInstance;
-            Type type = instance.GetType();
-            object propertyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
-            if (propertyvalue?.ToString() == DesiredValue.ToString())
+            return new Dictionary<string, object>
             {
-                ValidationResult result = base.IsValid(value, context);
-                return result;
-            }
-            return ValidationResult.Success;
+                { "rule", "regex" },
+                { "ruleparam", pattern }
+            };
         }
 
         public override string FormatErrorMessage(string name)
         {
-            ErrorMessage = UmbracoDictionary.GetDictionaryValue(DictionaryKey);
+            base.ErrorMessage = UmbracoDictionary.GetDictionaryValue(DictionaryKey);
             return base.FormatErrorMessage(name);
         }
     }

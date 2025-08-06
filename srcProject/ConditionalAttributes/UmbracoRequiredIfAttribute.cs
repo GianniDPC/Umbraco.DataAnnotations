@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Our.Umbraco.DataAnnotations.Conditionals;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Umbraco.DataAnnotations.Interfaces;
 
@@ -9,31 +11,25 @@ namespace Umbraco.DataAnnotations.ConditionalAttributes
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
     AllowMultiple = false)]
-    public sealed class UmbracoRequiredIfAttribute : RequiredAttribute, IUmbracoValidationAttribute
+    public sealed class UmbracoRequiredIfAttribute : ConditionalValidationAttribute, IUmbracoValidationAttribute
     {
         public string DictionaryKey { get; set; }
 
-        private string PropertyName { get; set; }
-        private object DesiredValue { get; set; }
-
-        public UmbracoRequiredIfAttribute(string propertyName, object desiredvalue)
+        protected override string ValidationName
         {
-            PropertyName = propertyName;
-            DesiredValue = desiredvalue;
+            get { return "requiredif"; }
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext context)
+        public UmbracoRequiredIfAttribute(string propertyName, object desiredvalue) : base(new RequiredAttribute(), propertyName, desiredvalue)
         {
-            object instance = context.ObjectInstance;
-            Type type = instance.GetType();
-            object propertyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
+        }
 
-            if (propertyvalue?.ToString() == DesiredValue.ToString())
+        protected override IDictionary<string, object> GetExtraValidationParameters()
+        {
+            return new Dictionary<string, object>()
             {
-                ValidationResult result = base.IsValid(value, context);
-                return result;
-            }
-            return ValidationResult.Success;
+                { "rule", "required" }
+            };
         }
 
         public override string FormatErrorMessage(string name)

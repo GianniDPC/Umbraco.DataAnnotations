@@ -10,7 +10,7 @@
   <PropertyGroup>
     <AssemblyName>Custom.Umbraco.DataAnnotations</AssemblyName>
     <PackageId>Custom.Umbraco.DataAnnotations</PackageId>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Authors>GianniDPC</Authors>
     <Company></Company>
     <Description>
@@ -20,6 +20,10 @@
     <RepositoryUrl>https://github.com/GianniDPC/Umbraco.DataAnnotations</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\**\*" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE.txt">
@@ -42,5 +46,9 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'net5.0-windows'">
     <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\" />
   </ItemGroup>
 </Project>

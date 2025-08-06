@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Our.Umbraco.DataAnnotations.Conditionals;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Umbraco.DataAnnotations.Interfaces;
 
@@ -9,30 +11,33 @@ namespace Umbraco.DataAnnotations.ConditionalAttributes
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter,
     AllowMultiple = false)]
-    public sealed class UmbracoRangeIfAttribute : RangeAttribute, IUmbracoValidationAttribute
+    public sealed class UmbracoRangeIfAttribute : ConditionalValidationAttribute, IUmbracoValidationAttribute
     {
         public string DictionaryKey { get; set; }
 
-        private string PropertyName { get; set; }
-        private object DesiredValue { get; set; }
+        private readonly int minimum;
+        private readonly int maximum;
 
-        public UmbracoRangeIfAttribute(int minimum, int maximum, string propertyName, object desiredvalue) : base(minimum, maximum)
+        protected override string ValidationName
         {
-            PropertyName = propertyName;
-            DesiredValue = desiredvalue;
+            get { return "rangeif"; }
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext context)
+        public UmbracoRangeIfAttribute(int minimum, int maximum, string dependentProperty, object targetValue)
+            : base(new RangeAttribute(minimum, maximum), dependentProperty, targetValue)
         {
-            object instance = context.ObjectInstance;
-            Type type = instance.GetType();
-            object propertyvalue = type.GetProperty(PropertyName).GetValue(instance, null);
-            if (propertyvalue?.ToString() == DesiredValue.ToString())
+            this.minimum = minimum;
+            this.maximum = maximum;
+        }
+
+        protected override IDictionary<string, object> GetExtraValidationParameters()
+        {
+            // Set the rule Range and the rule param [minumum,maximum]
+            return new Dictionary<string, object>()
             {
-                ValidationResult result = base.IsValid(value, context);
-                return result;
-            }
-            return ValidationResult.Success;
+                {"rule", "range"},
+                { "ruleparam", string.Format("[{0},{1}]", this.minimum, this.maximum) }
+            };
         }
 
         public override string FormatErrorMessage(string name)
