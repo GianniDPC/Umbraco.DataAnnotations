@@ -19,6 +19,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/GianniDPC/Umbraco.DataAnnotations</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <EnableEmbeddedFilesManifest>true</EnableEmbeddedFilesManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,5 +51,14 @@
 
   <ItemGroup>
     <Folder Include="Scripts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Scripts\jquery.validation.conditional.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Scripts\jquery.validation.custom.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
