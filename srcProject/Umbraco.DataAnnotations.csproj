@@ -1,54 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-windows;net5.0;net5.0-windows;net472</TargetFrameworks>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <SignAssembly>False</SignAssembly>
-    <Title>Umbraco DataAnnotations</Title>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;net10.0-windows;net8.0;net8.0-windows;net6.0;net6.0-windows;net5.0;net5.0-windows;net472</TargetFrameworks>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<SignAssembly>False</SignAssembly>
+		<Title>Umbraco DataAnnotations</Title>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <AssemblyName>Custom.Umbraco.DataAnnotations</AssemblyName>
-    <PackageId>Custom.Umbraco.DataAnnotations</PackageId>
-    <Version>1.0.6</Version>
-    <Authors>GianniDPC</Authors>
-    <Company></Company>
-    <Description>
-      Contains model validation attributes to for your properties, by using umbraco dictionary as the resource for error messages.
-    </Description>
-    <PackageProjectUrl></PackageProjectUrl>
-    <RepositoryUrl>https://github.com/GianniDPC/Umbraco.DataAnnotations</RepositoryUrl>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>Custom.Umbraco.DataAnnotations</AssemblyName>
+		<PackageId>Custom.Umbraco.DataAnnotations</PackageId>
+		<Version>1.0.7</Version>
+		<Authors>GianniDPC</Authors>
+		<Company></Company>
+		<Description>
+			Contains model validation attributes to for your properties, by using umbraco dictionary as the resource for error messages.
+		</Description>
+		<PackageProjectUrl></PackageProjectUrl>
+		<RepositoryUrl>https://github.com/GianniDPC/Umbraco.DataAnnotations</RepositoryUrl>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\**\*" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Scripts\**\*" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="UmbracoCms.Core" Version="8.0.0" />
-    <PackageReference Include="UmbracoCms.Web" Version="8.0.0" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http" />
-    <Reference Include="System.Web.Mvc" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+		<PackageReference Include="UmbracoCms.Core" Version="8.0.0" />
+		<PackageReference Include="UmbracoCms.Web" Version="8.0.0" />
+		<Reference Include="System.Web" />
+		<Reference Include="System.Web.Http" />
+		<Reference Include="System.Web.Mvc" />
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net6.0-windows'">
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.0.0" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'net5.0-windows'">
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0' Or '$(TargetFramework)' == 'net5.0-windows'">
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0' Or '$(TargetFramework)' == 'net6.0-windows'">
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net8.0-windows'">
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="13.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows'">
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="17.0.0" />
+		<PackageReference Include="Umbraco.Cms.Web.Common" Version="17.0.0" />	
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Scripts\" />
+	</ItemGroup>
 </Project>

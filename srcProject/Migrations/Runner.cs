@@ -41,7 +41,7 @@ namespace Umbraco.DataAnnotations.Migrations
 
     public class Migrations : IComponent
     {
-#if NET6_0
+#if NET6_0_OR_GREATER
         private ICoreScopeProvider _scopeProvider;
         private IMigrationPlanExecutor _migrationPlanExecutor;
         private IKeyValueService _keyValueService;
@@ -67,7 +67,7 @@ namespace Umbraco.DataAnnotations.Migrations
             _keyValueService = keyValueService;
             _runtimeState = runtimeState;
         }
-#else      
+#else
         private IScopeProvider _scopeProvider;
         private IMigrationBuilder _migrationBuilder;
         private IKeyValueService _keyValueService;

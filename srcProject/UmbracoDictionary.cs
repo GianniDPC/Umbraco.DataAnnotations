@@ -15,7 +15,10 @@ namespace Umbraco.DataAnnotations
     {
         public static string GetDictionaryValue(string dictionaryKey)
         {
-#if NET || NETCOREAPP
+#if NET10_0_OR_GREATER
+            var dictionaryItemService = HttpContextHelper.Current.RequestServices.GetService<IDictionaryItemService>();
+            var dictItem = dictionaryItemService?.GetAsync(dictionaryKey).GetAwaiter().GetResult();
+#elif NET5_0_OR_GREATER
             var localizationService = HttpContextHelper.Current.RequestServices.GetService<ILocalizationService>();
             var dictItem = localizationService.GetDictionaryItemByKey(dictionaryKey);
 #else
@@ -25,8 +28,16 @@ namespace Umbraco.DataAnnotations
             string key = "";
             if (dictItem != null)
             {
+#if NET8_0_OR_GREATER
+                key = dictItem.Translations.
+                    FirstOrDefault(x => x.LanguageIsoCode == Thread.CurrentThread.CurrentCulture.Name)?.Value;
+#elif NET5_0_OR_GREATER
                 key = dictItem.Translations.
                     FirstOrDefault(x => x.Language.CultureInfo.Name == Thread.CurrentThread.CurrentCulture.Name)?.Value;
+#else
+                key = dictItem.Translations.
+                    FirstOrDefault(x => x.Language.CultureInfo.Name == Thread.CurrentThread.CurrentCulture.Name)?.Value;
+#endif
             }
 
             if (!string.IsNullOrEmpty(key))
