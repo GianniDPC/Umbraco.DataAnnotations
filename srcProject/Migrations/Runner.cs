@@ -1,4 +1,6 @@
 ﻿#if NET || NETCOREAPP
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
@@ -21,16 +23,20 @@ namespace Umbraco.DataAnnotations.Migrations
 {
 
 #if NET || NETCOREAPP
-    public class MigrationRunnerComposer : IComposer
+    public class UmbracoDataAnnotationsComposer : IComposer
     {
         public void Compose(IUmbracoBuilder builder)
         {
+            // Ensure IHttpContextAccessor is registered in the DI container.
+            // HttpContextHelper will resolve it via the Migrations component Initialize().
+            builder.Services.AddHttpContextAccessor();
+
             builder.Components().Append<Migrations>();
         }
     }
 #else
     [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    public class MigrationRunnerComposer : IComposer
+    public class UmbracoDataAnnotationsComposer : IComposer
     {
         public void Compose(Composition composition)
         {
@@ -46,26 +52,30 @@ namespace Umbraco.DataAnnotations.Migrations
         private IMigrationPlanExecutor _migrationPlanExecutor;
         private IKeyValueService _keyValueService;
         private IRuntimeState _runtimeState;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public Migrations(ICoreScopeProvider scopeProvider, IMigrationPlanExecutor migrationPlanExecutor, IKeyValueService keyValueService, IRuntimeState runtimeState)
+        public Migrations(ICoreScopeProvider scopeProvider, IMigrationPlanExecutor migrationPlanExecutor, IKeyValueService keyValueService, IRuntimeState runtimeState, IHttpContextAccessor httpContextAccessor)
         {
             _scopeProvider = scopeProvider;
             _migrationPlanExecutor = migrationPlanExecutor;
             _keyValueService = keyValueService;
             _runtimeState = runtimeState;
+            _httpContextAccessor = httpContextAccessor;
         }
 #elif NET5_0
         private IScopeProvider _scopeProvider;
         private IMigrationPlanExecutor _migrationPlanExecutor;
         private IKeyValueService _keyValueService;
         private IRuntimeState _runtimeState;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public Migrations(IScopeProvider scopeProvider, IMigrationPlanExecutor migrationPlanExecutor, IKeyValueService keyValueService, IRuntimeState runtimeState)
+        public Migrations(IScopeProvider scopeProvider, IMigrationPlanExecutor migrationPlanExecutor, IKeyValueService keyValueService, IRuntimeState runtimeState, IHttpContextAccessor httpContextAccessor)
         {
             _scopeProvider = scopeProvider;
             _migrationPlanExecutor = migrationPlanExecutor;
             _keyValueService = keyValueService;
             _runtimeState = runtimeState;
+            _httpContextAccessor = httpContextAccessor;
         }
 #else
         private IScopeProvider _scopeProvider;
@@ -85,6 +95,11 @@ namespace Umbraco.DataAnnotations.Migrations
         public void Initialize()
         {
 #if NET || NETCOREAPP
+            // Wire up the DI-managed IHttpContextAccessor into HttpContextHelper.
+            // This replaces the broken static `new HttpContextAccessor()` pattern which
+            // always returns null on threads previously used by background job schedulers.
+            HttpContextHelper.SetHttpContextAccessor(_httpContextAccessor);
+
             if (_runtimeState.Level < RuntimeLevel.Run)
             {
                 return;

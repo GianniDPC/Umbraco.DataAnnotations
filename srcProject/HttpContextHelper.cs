@@ -11,9 +11,14 @@ namespace Umbraco.DataAnnotations
     {
 
 #if NET || NETCOREAPP
-        public static HttpContext Current => HttpContextAccessor.HttpContext;
+        public static HttpContext Current => _httpContextAccessor?.HttpContext;
 
-        private static readonly HttpContextAccessor HttpContextAccessor = new HttpContextAccessor();
+        private static IHttpContextAccessor _httpContextAccessor;
+
+        internal static void SetHttpContextAccessor(IHttpContextAccessor accessor)
+        {
+            _httpContextAccessor = accessor;
+        }
 #else
         public static HttpContext Current => HttpContext.Current;
 #endif
